@@ -54,43 +54,27 @@ async def send_logs(_, message: Message):
             message.reply_text(e, quote=True)
             LOGGER.warn(f"Error in /log : {e}")
 
-@texttourl.on_message(filters.command("urlize"))
+@texttourl.on_message(filters.command(["urlize","urlize2"]))
 async def urlize(_, message: Message):
     asking1 = await texttourl.ask(message.chat.id, "**Send me the text you wanna transform into a link :**")
     text = asking1.text
     asking2 = await texttourl.ask(message.chat.id, "**Now, send me the link you wanna put into that text :**")
     url = asking2.text
+    preview = True if message.command[0]=="urlize2" else False
     if re.match(url_regex, url):
         try:
-            await message.reply_text(f"[{text}]({url})")
+            await message.reply_text(f"[{text}]({url})",disable_web_page_preview=preview)
         except FloodWait as f:
             asyncio.sleep(f.x)
         except:
             try:
-                await texttourl.send_message(chat_id=message.from_user.id, text=f"[{text}]({url})")
-            except:
+                await texttourl.send_message(chat_id=message.from_user.id, text=f"[{text}]({url})",disable_web_page_preview=preview)
+            except Exception as e:
+                LOGGER.error(str(e))
                 await texttourl.send_message(chat_id=message.from_user.id, text="An unknown error happened 😔")
     else:
         await message.reply_text("That link is not valid 💀")
 
-@texttourl.on_message(filters.command("urlize2"))
-async def urlize2 (_, message: Message):
-    asking1 = await texttourl.ask(message.chat.id, "**Send me the text you wanna transform into a link :**")
-    text = asking1.text
-    asking2 = await texttourl.ask(message.chat.id, "**Now, send me the link you wanna put into that text :**")
-    url = asking2.text
-    if re.match(url_regex, url):
-        try:
-            await message.reply_text(f"[{text}]({url})", disable_web_page_preview=True)
-        except FloodWait as f:
-            asyncio.sleep(f.x)
-        except:
-            try:
-                await texttourl.send_message(chat_id=message.from_user.id, text=f"[{text}]({url})", disable_web_page_preview=True)
-            except:
-                await texttourl.send_message(chat_id=message.from_user.id, text="An unknown error happened 😔")
-    else:
-        await message.reply_text("That link is not valid 💀")
 
 LOGGER.info("Bot started")
 texttourl.run()
