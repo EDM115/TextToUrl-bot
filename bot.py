@@ -17,11 +17,6 @@ texttourl = Client(
         sleep_threshold = 10
     )
 
-texttourl.set_bot_commands([
-    BotCommand("start", "Useless"),
-    BotCommand("urlize", "Create text with link inside"),
-    BotCommand("urlize2", "Same as above, but URL preview is disabled"),
-    BotCommand("log", "Send you the logs, in case it's needed")])
 
 logging.basicConfig(
     level=logging.INFO,
@@ -75,6 +70,15 @@ async def urlize(_, message: Message):
     else:
         await message.reply_text("That link is not valid 💀")
 
+async def StartBot():
+    await texttourl.start()
+    await texttourl.set_bot_commands([
+    BotCommand("start", "Useless"),
+    BotCommand("urlize", "Create text with link inside"),
+    BotCommand("urlize2", "Same as above, but URL preview is disabled"),
+    BotCommand("log", "Send you the logs, in case it's needed")])
+    LOGGER.info("Bot started")
+    idle()
+    texttourl.stop()
 
-LOGGER.info("Bot started")
-texttourl.run()
+asyncio.run(StartBot)
