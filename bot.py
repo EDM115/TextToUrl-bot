@@ -1,6 +1,7 @@
 # (c) EDM115 - 2022
 
 import os
+import asyncio
 import logging
 import re
 from pyrogram import Client, errors, filters, idle
