@@ -3,8 +3,8 @@
 import os
 import logging
 import re
-from pyrogram import Client, errors, filters, idle
-from pyrogram.types import Message, ChatMember
+from pyrogram import Client, errors, filters
+from pyrogram.types import BotCommand, Message
 from pyrogram.errors import FloodWait, RPCError
 import pyromod.listen
 from config import *
@@ -16,6 +16,12 @@ texttourl = Client(
         bot_token = Config.BOT_TOKEN,
         sleep_threshold = 10
     )
+
+await texttourl.set_bot_commands([
+    BotCommand("start", "Useless"),
+    BotCommand("urlize", "Create text with link inside"),
+    BotCommand("urlize2", "Same as above, but URL preview is disabled"),
+    BotCommand("log", "Send you the logs, in case it's needed")])
 
 logging.basicConfig(
     level=logging.INFO,
