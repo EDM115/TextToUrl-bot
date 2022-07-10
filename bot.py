@@ -2,14 +2,13 @@
 
 import os
 import logging
-import time
+import re
 from pyrogram import Client, errors, filters, idle
 from pyrogram.types import Message, ChatMember
 from pyrogram.errors import FloodWait, RPCError
 import pyromod.listen
 from config import *
 
-# Initialize the client here
 texttourl = Client(
         "TextToUrl-bot",
         api_id = Config.API_ID,
@@ -26,12 +25,12 @@ logging.basicConfig(
 LOGGER = logging.getLogger(__name__)
 logging.getLogger("pyrogram").setLevel(logging.WARN)
 
-# handle /start with a cute message
+url_regex = "((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z]){2,6}([a-zA-Z0-9\.\&\/\?\:@\-_=#])*"
+
 @texttourl.on_message(filters.command("start"))
 async def start_bot(_, message: Message):
     await message.reply_text(text="**Hello {} 👋**\n\nI'm TextToUrl-bot, a bot made for creating texts with links inside.\nDo **/urlize** to start".format(message.from_user.mention), disable_web_page_preview=True)
 
-# Added /log for bug tracking
 @texttourl.on_message(filters.command("log"))
 async def send_logs(_, message: Message):
     with open('logs.txt', 'rb') as doc_f:
@@ -55,21 +54,18 @@ async def urlize(_, message: Message):
     text = asking1.text
     asking2 = await texttourl.ask(message.chat.id, "**Now, send me the link you wanna put into that text :**")
     url = asking2.text
+    if re.match(url_regex, url):
+        try:
+            await message.reply_text()
+        except FloodWait as f:
+            asyncio.sleep(f.x)
+        except:
             try:
-                await _.copy_message(
-                    chat_id=dest,
-                    from_chat_id=target,
-                    message_id=id 
-                )
-            except FloodWait as f:
-                asyncio.sleep(f.x)
-                id-=1
-            except Exception:
-                continue
-    except Exception as e:
-        await message.reply_text(str(e))
-    await message.reply_text("Done Forwarding")
+                await texttourl.send_message(chat_id=message.from_user.id, text="")
+            except:
+                await texttourl.send_message(chat_id=message.from_user.id, text="An unknown error happened 😔")
+    else:
+        await message.reply_text("That link is not valid 💀")
 
-# Run the bot
-LOGGER.info("We start captain !")
+LOGGER.info("Bot started")
 texttourl.run()
