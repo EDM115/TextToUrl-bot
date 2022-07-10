@@ -79,7 +79,7 @@ async def StartBot():
     BotCommand("urlize2", "Same as above, but URL preview is disabled"),
     BotCommand("log", "Send you the logs, in case it's needed")])
     LOGGER.info("Bot started")
-    idle()
+    await idle()
     await texttourl.stop()
 
 asyncio.run(StartBot())
