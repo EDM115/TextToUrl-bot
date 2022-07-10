@@ -82,4 +82,4 @@ async def StartBot():
     idle()
     texttourl.stop()
 
-asyncio.run(StartBot)
+asyncio.run(StartBot())
