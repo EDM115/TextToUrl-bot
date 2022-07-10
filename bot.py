@@ -80,6 +80,6 @@ async def StartBot():
     BotCommand("log", "Send you the logs, in case it's needed")])
     LOGGER.info("Bot started")
     idle()
-    texttourl.stop()
+    await texttourl.stop()
 
 asyncio.run(StartBot())
