@@ -17,7 +17,7 @@ texttourl = Client(
         sleep_threshold = 10
     )
 
-await texttourl.set_bot_commands([
+texttourl.set_bot_commands([
     BotCommand("start", "Useless"),
     BotCommand("urlize", "Create text with link inside"),
     BotCommand("urlize2", "Same as above, but URL preview is disabled"),
