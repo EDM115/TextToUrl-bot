@@ -3,7 +3,7 @@
 import os
 import logging
 import re
-from pyrogram import Client, errors, filters
+from pyrogram import Client, errors, filters, idle
 from pyrogram.types import BotCommand, Message
 from pyrogram.errors import FloodWait, RPCError
 import pyromod.listen
