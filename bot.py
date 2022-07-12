@@ -17,11 +17,12 @@ texttourl = Client(
         sleep_threshold = 10
     )
 
-await texttourl.set_bot_commands([
-    BotCommand("start", "Useless"),
-    BotCommand("urlize", "Create text with link inside"),
-    BotCommand("urlize2", "Same as above, but URL preview is disabled"),
-    BotCommand("log", "Send you the logs, in case it's needed")])
+async def setCommands():
+    texttourl.set_bot_commands([
+        BotCommand("start", "Useless"),
+        BotCommand("urlize", "Create text with link inside"),
+        BotCommand("urlize2", "Same as above, but URL preview is disabled"),
+        BotCommand("log", "Send you the logs, in case it's needed")])
 
 logging.basicConfig(
     level=logging.INFO,
@@ -68,7 +69,8 @@ async def urlize(_, message: Message):
         except:
             try:
                 await texttourl.send_message(chat_id=message.from_user.id, text=f"[{text}]({url})")
-            except:
+            except Exception as e:
+                LOGGER.error(e)
                 await texttourl.send_message(chat_id=message.from_user.id, text="An unknown error happened 😔")
     else:
         await message.reply_text("That link is not valid 💀")
@@ -87,10 +89,12 @@ async def urlize2 (_, message: Message):
         except:
             try:
                 await texttourl.send_message(chat_id=message.from_user.id, text=f"[{text}]({url})", disable_web_page_preview=True)
-            except:
+            except Exception as e:
+                LOGGER.error(e)
                 await texttourl.send_message(chat_id=message.from_user.id, text="An unknown error happened 😔")
     else:
         await message.reply_text("That link is not valid 💀")
 
 LOGGER.info("Bot started")
+await setCommands()
 texttourl.run()
